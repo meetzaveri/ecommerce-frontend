@@ -1,0 +1,27 @@
+#main_sidebar {
+  height: 100vh;
+  transition: all 300ms ease;
+  overflow: hidden;
+  z-index: 1;
+  box-shadow: 0px 0px 10px #333;
+}
+
+.checkbox-container {
+  padding: 10px;
+}
+
+#main_content {
+  margin-left: 12%;
+}
+
+.custom-form-register {
+  margin: 0px 0px 10px 0px;
+}
+
+.custom-form-login {
+  margin: 0px 0px 10px 0px;
+}
+
+.nav_box > li > a {
+  border-radius: 0px !important;
+}
