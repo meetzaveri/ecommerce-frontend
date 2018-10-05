@@ -38,10 +38,13 @@ class Sidebar extends Component {
     let finalProducts = Object.keys(finalBrandObj);
     console.log('checkedItemsForBrands', checkedItemsForBrands, finalProducts);
     this.props.onFilterBrand(finalProducts);
-    this.props.filterGeneral({
-      primaryColor: [...this.state.checkedItemsForColors],
-      brand: finalProducts
-    });
+    this.props.filterGeneral(
+      {
+        primaryColor: [...this.state.checkedItemsForColors],
+        brand: finalProducts
+      },
+      finalProducts
+    );
     this.setState(prevState => ({
       checkedItems: prevState.checkedItems.set(item, isChecked),
       checkedItemsForBrands: finalProducts
@@ -71,10 +74,13 @@ class Sidebar extends Component {
     let finalProducts = Object.keys(finalColorObj);
     console.log('checkedItemsForColors', checkedItemsForColors, finalProducts);
     this.props.onFilterColor(finalProducts);
-    this.props.filterGeneral({
-      brand: [...this.state.checkedItemsForBrands],
-      primaryColor: finalProducts
-    });
+    this.props.filterGeneral(
+      {
+        brand: [...this.state.checkedItemsForBrands],
+        primaryColor: finalProducts
+      },
+      finalProducts
+    );
     this.setState(prevState => ({
       checkedItems: prevState.checkedItems.set(item, isChecked),
       checkedItemsForColors: finalProducts

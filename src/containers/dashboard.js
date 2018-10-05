@@ -21,8 +21,12 @@ class DashboardContainer extends Component {
     console.log('finalProducts for color', filterProdRequest, this.props.items);
     this.props.filterColor(this.props.items, filterProdRequest);
   };
-  filterGeneral = filterProdRequest => {
-    this.props.filterGeneral(this.props.items, filterProdRequest);
+  filterGeneral = (filterProdRequest, currentFilterCategory) => {
+    this.props.filterGeneral(
+      this.props.items,
+      filterProdRequest,
+      currentFilterCategory
+    );
   };
   render() {
     console.log('this.props.items', this.props.items);
@@ -68,8 +72,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(filterItemsAction(items, 'brand', filterProductRequest)),
     filterColor: (items, filterProductRequest) =>
       dispatch(filterItemsAction(items, 'primaryColor', filterProductRequest)),
-    filterGeneral: (items, filterProductRequest) =>
-      dispatch(filterGeneralItems(items, filterProductRequest))
+    filterGeneral: (items, filterProductRequest, currentFilterCategory) =>
+      dispatch(
+        filterGeneralItems(items, filterProductRequest, currentFilterCategory)
+      )
   };
 };
 
