@@ -19,10 +19,11 @@ class Sidebar extends Component {
     console.log('e.target.name', e.target.name);
     const item = e.target.name;
     const isChecked = e.target.checked;
-    const updatedBrands = this.state.checkedItemsForBrands;
-    updatedBrands.push(item);
+
+    const checkedItemsForBrands = [...this.state.checkedItemsForBrands];
+    checkedItemsForBrands.push(item);
     let finalBrandObj = {};
-    let duplicateItems = this.state.checkedItemsForBrands;
+    let duplicateItems = checkedItemsForBrands;
     duplicateItems.forEach(i => {
       if (item === i) {
         if (isChecked) {
@@ -35,12 +36,12 @@ class Sidebar extends Component {
       }
     });
     let finalProducts = Object.keys(finalBrandObj);
-    console.log(
-      'this.state.checkedItemsForBrands',
-      this.state.checkedItemsForBrands,
-      finalProducts
-    );
-    this.props.onFilterBrand();
+    console.log('checkedItemsForBrands', checkedItemsForBrands, finalProducts);
+    this.props.onFilterBrand(finalProducts);
+    this.props.filterGeneral({
+      primaryColor: [...this.state.checkedItemsForColors],
+      brand: finalProducts
+    });
     this.setState(prevState => ({
       checkedItems: prevState.checkedItems.set(item, isChecked),
       checkedItemsForBrands: finalProducts
@@ -51,12 +52,32 @@ class Sidebar extends Component {
     console.log('e.target.name', e.target.name);
     const item = e.target.name;
     const isChecked = e.target.checked;
+
+    const checkedItemsForColors = [...this.state.checkedItemsForColors];
+    checkedItemsForColors.push(item);
+    let finalColorObj = {};
+    let duplicateItems = checkedItemsForColors;
+    duplicateItems.forEach(i => {
+      if (item === i) {
+        if (isChecked) {
+          finalColorObj[i] = i;
+        } else {
+          delete finalColorObj[i];
+        }
+      } else {
+        finalColorObj[i] = i;
+      }
+    });
+    let finalProducts = Object.keys(finalColorObj);
+    console.log('checkedItemsForColors', checkedItemsForColors, finalProducts);
+    this.props.onFilterColor(finalProducts);
+    this.props.filterGeneral({
+      brand: [...this.state.checkedItemsForBrands],
+      primaryColor: finalProducts
+    });
     this.setState(prevState => ({
       checkedItems: prevState.checkedItems.set(item, isChecked),
-      checkedItemsForColors: prevState.checkedItemsForColors.set(
-        item,
-        isChecked
-      )
+      checkedItemsForColors: finalProducts
     }));
     console.log('this.state.checkedItemsforcolor');
   };
@@ -67,7 +88,7 @@ class Sidebar extends Component {
         <div id="main_sidebar">
           <div className="checkbox-container">
             {/* For selecting brand */}
-            Brand
+            <h2> Brand</h2>
             {this.props.items.brands &&
               this.props.items.brands.map(item => (
                 <div key={item.key}>
@@ -84,7 +105,7 @@ class Sidebar extends Component {
           </div>
           <div className="checkbox-container">
             {/* For selecting Color */}
-            Color
+            <h2>Color</h2>
             {this.props.items.colors &&
               this.props.items.colors.map(item => (
                 <div key={item.key}>
