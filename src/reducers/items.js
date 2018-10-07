@@ -23,7 +23,27 @@ export function items(state = [], action) {
       return action.items;
 
     default:
-      console.log('Default state');
+      return state;
+  }
+}
+
+export function filterItemsInProcess(state = [],action){
+  switch (action.type) {
+    case 'FILTER_ITEMS_IN_PROCESS':
+      return action.isFilterLoading;
+
+    default:
+      return state;
+  }
+}
+
+
+export function filteredItems(state = [],action){
+  switch (action.type) {
+    case 'FILTER_ITEMS_SUCCESS':
+      return action.filteredItems;
+
+    default:
       return state;
   }
 }
