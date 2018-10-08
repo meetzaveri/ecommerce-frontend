@@ -1,5 +1,6 @@
 const API = {
-    getData : 'http://localhost:8000/'
-}
+  getData: 'http://localhost:8000/',
+  filterData: 'http://localhost:8000/filter'
+};
 
-export default API
+export default API;

@@ -22,12 +22,15 @@ export function items(state = [], action) {
     case 'ITEMS_FETCH_DATA_SUCCESS':
       return action.items;
 
+    case 'LOAD_MORE_ITEMS_SUCCESS':
+      return action.items;
+
     default:
       return state;
   }
 }
 
-export function filterItemsInProcess(state = [],action){
+export function filterItemsInProcess(state = [], action) {
   switch (action.type) {
     case 'FILTER_ITEMS_IN_PROCESS':
       return action.isFilterLoading;
@@ -37,8 +40,7 @@ export function filterItemsInProcess(state = [],action){
   }
 }
 
-
-export function filteredItems(state = [],action){
+export function filteredItems(state = [], action) {
   switch (action.type) {
     case 'FILTER_ITEMS_SUCCESS':
       return action.filteredItems;

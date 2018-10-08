@@ -1,5 +1,6 @@
 import { itemsFetchData } from './items';
 import API from '../api/api';
+import axios from 'axios';
 
 export function filterItemsInProcess(bool) {
   return {
@@ -56,98 +57,31 @@ export function filterItemsAction(
 
 export function filterGeneralItems(
   productData,
-  filterProductRequestArr,
+  filterRequestArr,
   currentFilterCategory
 ) {
-  return dispatch => {
+  return async dispatch => {
     dispatch(filterItemsInProcess(true));
-    console.log(
-      'items in filter general',
-      productData,
-      filterProductRequestArr
-    );
-    let filterpass1ForBrand = [];
-    let filterpass1ForColors = [];
     let items = Object.assign({}, productData);
-    let finalData = null;
-    if (
-      filterProductRequestArr.brand.length === 0 ||
-      filterProductRequestArr.primaryColor.length === 0
-    ) {
-      if (
-        filterProductRequestArr.primaryColor.length === 0 &&
-        filterProductRequestArr.brand.length === 0
-      ) {
-        dispatch(itemsFetchData(API.getData));
-      } else {
-        finalData = items.data.filter(item => {
-          let matchedItem = null;
-          currentFilterCategory.forEach(prod => {
-            if (prod === item.brand || prod === item.primaryColor) {
-              console.log('Product is matched');
-              matchedItem = item;
-            }
-          });
-          if (matchedItem) {
-            return matchedItem;
-          }
-        });
-        console.log('finalData', finalData);
-      }
-    } else {
-      // filter pass 1 for brand
-      items.data.forEach(item => {
-        filterProductRequestArr.brand.forEach(i => {
-          if (item.brand === i) {
-            filterpass1ForBrand.push(item);
-          }
-        });
+    let filteredDataFromServer = null;
+    // console.log('items in filter general', productData, filterRequestArr);
+    let rawfilterProductRequestArr = {
+      primaryColor: filterRequestArr.primaryColor.join(','),
+      brands: filterRequestArr.brand.join(',')
+    };
+
+    let filterReq = JSON.stringify(rawfilterProductRequestArr);
+
+    await axios
+      .post(API.filterData, {
+        filterReq,
+        currentFilterCategory
+      })
+      .then(responseJson => {
+        // console.log('AFTER POST API CALL data', responseJson);
+        filteredDataFromServer = responseJson.data;
       });
-
-      // filter pass 1 for colors
-      items.data.forEach(item => {
-        filterProductRequestArr.primaryColor.forEach(i => {
-          if (item.primaryColor === i) {
-            filterpass1ForColors.push(item);
-          }
-        });
-      });
-
-      console.log(
-        'Filter pass 1 results',
-        filterpass1ForBrand,
-        filterpass1ForColors
-      );
-
-      let filterpass2ForBrands = [];
-      let filterpass2ForColors = [];
-
-      // filter pass 2 for brands filtering with colors
-      filterpass1ForBrand.forEach(item => {
-        filterProductRequestArr.primaryColor.forEach(i => {
-          if (item.primaryColor === i) {
-            filterpass2ForBrands.push(item);
-          }
-        });
-      });
-
-      // filter pass 2 for colors filtering with brands
-      filterpass1ForColors.forEach(item => {
-        filterProductRequestArr.brand.forEach(i => {
-          if (item.brand === i) {
-            filterpass2ForColors.push(item);
-          }
-        });
-      });
-
-      console.log(
-        'Filter pass 2 results',
-        filterpass2ForBrands,
-        filterpass2ForColors
-      );
-      finalData = filterpass2ForBrands;
-    }
-    items.data = finalData;
+    items.data = filteredDataFromServer;
     dispatch(filterItemsInProcess(false));
     dispatch(filteredItems(items));
   };

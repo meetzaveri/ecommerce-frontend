@@ -1,7 +1,5 @@
 import React, { Component, Fragment } from 'react';
 import '../main.css';
-import { Col, Nav, NavItem } from 'react-bootstrap';
-import { checkboxes } from '../../utils/utils';
 import Checkbox from './Checkbox';
 import PropTypes from 'prop-types';
 
@@ -22,6 +20,8 @@ class Sidebar extends Component {
 
     const checkedItemsForBrands = [...this.state.checkedItemsForBrands];
     checkedItemsForBrands.push(item);
+
+    // DEDUPLICATION
     let finalBrandObj = {};
     let duplicateItems = checkedItemsForBrands;
     duplicateItems.forEach(i => {
@@ -37,13 +37,12 @@ class Sidebar extends Component {
     });
     let finalProducts = Object.keys(finalBrandObj);
     console.log('checkedItemsForBrands', checkedItemsForBrands, finalProducts);
-    this.props.onFilterBrand(finalProducts);
     this.props.filterGeneral(
       {
         primaryColor: [...this.state.checkedItemsForColors],
         brand: finalProducts
       },
-      finalProducts
+      finalProducts.length > 0 ? 'brand' : 'primaryColor'
     );
     this.setState(prevState => ({
       checkedItems: prevState.checkedItems.set(item, isChecked),
@@ -59,6 +58,8 @@ class Sidebar extends Component {
     const checkedItemsForColors = [...this.state.checkedItemsForColors];
     checkedItemsForColors.push(item);
     let finalColorObj = {};
+
+    // DEDUPLICATION
     let duplicateItems = checkedItemsForColors;
     duplicateItems.forEach(i => {
       if (item === i) {
@@ -73,13 +74,12 @@ class Sidebar extends Component {
     });
     let finalProducts = Object.keys(finalColorObj);
     console.log('checkedItemsForColors', checkedItemsForColors, finalProducts);
-    this.props.onFilterColor(finalProducts);
     this.props.filterGeneral(
       {
         brand: [...this.state.checkedItemsForBrands],
         primaryColor: finalProducts
       },
-      finalProducts
+      finalProducts.length > 0 ? 'primaryColor' : 'brand'
     );
     this.setState(prevState => ({
       checkedItems: prevState.checkedItems.set(item, isChecked),
@@ -96,8 +96,8 @@ class Sidebar extends Component {
             {/* For selecting brand */}
             <h2> Brand</h2>
             {this.props.items.brands &&
-              this.props.items.brands.map(item => (
-                <div key={item.key}>
+              this.props.items.brands.map((item, index) => (
+                <div key={index}>
                   <label>
                     {item}
                     <Checkbox
@@ -113,8 +113,8 @@ class Sidebar extends Component {
             {/* For selecting Color */}
             <h2>Color</h2>
             {this.props.items.colors &&
-              this.props.items.colors.map(item => (
-                <div key={item.key}>
+              this.props.items.colors.map((item, index) => (
+                <div key={index}>
                   <label>
                     {item}
                     <Checkbox
@@ -126,11 +126,11 @@ class Sidebar extends Component {
                 </div>
               ))}
           </div>
-          <div className="checkbox-container">
-            {/* For selecting Color */}
+          {/* <div className="checkbox-container">
+            
             Price
-            {checkboxes.map(item => (
-              <div key={item.key}>
+            {checkboxes.map((item, index) => (
+              <div key={index}>
                 <label>
                   {item.name}
                   <Checkbox
@@ -141,11 +141,16 @@ class Sidebar extends Component {
                 </label>
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
       </Fragment>
     );
   }
 }
+
+Sidebar.propTypes = {
+  items: PropTypes.object.isRequired,
+  filterGeneral: PropTypes.func
+};
 
 export default Sidebar;

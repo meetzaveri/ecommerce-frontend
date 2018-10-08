@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Dashboard from '../components/dashboard';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { itemsFetchData } from '../actions/items';
+import { itemsFetchData, loadMoreItems } from '../actions/items';
 import { filterItemsAction, filterGeneralItems } from '../actions/filteritems';
 
 class DashboardContainer extends Component {
@@ -11,17 +11,20 @@ class DashboardContainer extends Component {
     this.state = {};
   }
   componentDidMount() {
-    this.props.fetchData('http://localhost:8000/');
+    this.props.fetchData('http://localhost:8000?pagination=0');
   }
-  filterBrand = filterProdRequest => {
-    console.log('finalProducts for brand', filterProdRequest, this.props.items);
-    this.props.filterBrand(this.props.items, filterProdRequest);
+  loadDataViaPagination = pagination => {
+    this.props.loadMoreItems(
+      'http://localhost:8000?pagination=' + pagination,
+      this.props.items
+    );
   };
-  filterColor = filterProdRequest => {
-    console.log('finalProducts for color', filterProdRequest, this.props.items);
-    this.props.filterColor(this.props.items, filterProdRequest);
-  };
+
   filterGeneral = (filterProdRequest, currentFilterCategory) => {
+    console.log(
+      'this.props.items products for filter prod req',
+      this.props.items
+    );
     this.props.filterGeneral(
       this.props.items,
       filterProdRequest,
@@ -30,6 +33,8 @@ class DashboardContainer extends Component {
   };
   render() {
     console.log('this.props.items', this.props.items);
+    const { loadDataViaPagination } = this;
+    const actions = { loadDataViaPagination };
     return (
       <div>
         {this.props.filteredItems.data &&
@@ -39,6 +44,8 @@ class DashboardContainer extends Component {
             onFilterBrand={this.filterBrand}
             onFilterColor={this.filterColor}
             filterGeneral={this.filterGeneral}
+            filterFlag={true}
+            actions={actions}
           />
         ) : (
           <Dashboard
@@ -46,6 +53,8 @@ class DashboardContainer extends Component {
             onFilterBrand={this.filterBrand}
             onFilterColor={this.filterColor}
             filterGeneral={this.filterGeneral}
+            filterFlag={false}
+            actions={actions}
           />
         )}
       </div>
@@ -68,6 +77,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchData: url => dispatch(itemsFetchData(url)),
+    loadMoreItems: (url, prevStateData) =>
+      dispatch(loadMoreItems(url, prevStateData)),
     filterBrand: (items, filterProductRequest) =>
       dispatch(filterItemsAction(items, 'brand', filterProductRequest)),
     filterColor: (items, filterProductRequest) =>
