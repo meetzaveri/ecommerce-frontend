@@ -64,7 +64,6 @@ export function itemsFetchData(url) {
 export function loadMoreItems(url, prevData) {
   return (dispatch, getState) => {
     dispatch(itemsAreLoading(true));
-    console.log('getState()', getState());
     axios
       .get(url)
       .then(response => {

@@ -3,7 +3,7 @@ import Dashboard from '../components/dashboard';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { itemsFetchData, loadMoreItems } from '../actions/items';
-import { filterItemsAction, filterGeneralItems } from '../actions/filteritems';
+import { filterGeneralItems } from '../actions/filteritems';
 
 class DashboardContainer extends Component {
   constructor(props) {
@@ -33,25 +33,22 @@ class DashboardContainer extends Component {
   };
   render() {
     console.log('this.props.items', this.props.items);
+    console.log('this.props.filteredItems', this.props.filteredItems);
+    const { items, filteredItems } = this.props;
     const { loadDataViaPagination } = this;
     const actions = { loadDataViaPagination };
     return (
       <div>
-        {this.props.filteredItems.data &&
-        this.props.filteredItems.data.length > 0 ? (
+        {filteredItems.data && filteredItems.data.length >= 0 ? (
           <Dashboard
-            items={this.props.filteredItems}
-            onFilterBrand={this.filterBrand}
-            onFilterColor={this.filterColor}
+            items={filteredItems}
             filterGeneral={this.filterGeneral}
             filterFlag={true}
             actions={actions}
           />
         ) : (
           <Dashboard
-            items={this.props.items}
-            onFilterBrand={this.filterBrand}
-            onFilterColor={this.filterColor}
+            items={items}
             filterGeneral={this.filterGeneral}
             filterFlag={false}
             actions={actions}
@@ -63,7 +60,9 @@ class DashboardContainer extends Component {
 }
 
 DashboardContainer.propTypes = {
-  fetchData: PropTypes.func.isRequired
+  fetchData: PropTypes.func,
+  loadDataViaPagination: PropTypes.func,
+  filteredItems: PropTypes.object
 };
 
 const mapStateToProps = state => {
@@ -79,10 +78,6 @@ const mapDispatchToProps = dispatch => {
     fetchData: url => dispatch(itemsFetchData(url)),
     loadMoreItems: (url, prevStateData) =>
       dispatch(loadMoreItems(url, prevStateData)),
-    filterBrand: (items, filterProductRequest) =>
-      dispatch(filterItemsAction(items, 'brand', filterProductRequest)),
-    filterColor: (items, filterProductRequest) =>
-      dispatch(filterItemsAction(items, 'primaryColor', filterProductRequest)),
     filterGeneral: (items, filterProductRequest, currentFilterCategory) =>
       dispatch(
         filterGeneralItems(items, filterProductRequest, currentFilterCategory)

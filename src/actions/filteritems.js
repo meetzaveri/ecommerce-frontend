@@ -16,45 +16,6 @@ export function filteredItems(filteredItems) {
   };
 }
 
-export function filterItemsAction(
-  items,
-  filterCategory,
-  filterProductRequestArr
-) {
-  return dispatch => {
-    // dispatch(filterItemsInProcess(true));
-    // // console.log('items in filteritems action',items);
-    // console.log(
-    //   'filterProductRequestArr',
-    //   filterProductRequestArr,
-    //   items,
-    //   filterCategory
-    // );
-    // let dataToFilter = Object.assign({}, items);
-    // if (filterProductRequestArr.length === 0) {
-    //   dispatch(itemsFetchData(API.getData));
-    // } else {
-    //   let newArr = dataToFilter.data.filter(item => {
-    //     let matchedItem = null;
-    //     filterProductRequestArr.forEach(prod => {
-    //       if (prod === item[filterCategory]) {
-    //         console.log('Product is matched');
-    //         matchedItem = item;
-    //       }
-    //     });
-    //     if (matchedItem) {
-    //       return matchedItem;
-    //     }
-    //   });
-    //   console.log('newArr', newArr);
-    //   dataToFilter.data = newArr;
-    //   // console.log('dataToFilter',dataToFilter);
-    // }
-    // dispatch(filterItemsInProcess(false));
-    // dispatch(filteredItems(dataToFilter));
-  };
-}
-
 export function filterGeneralItems(
   productData,
   filterRequestArr,
@@ -81,7 +42,10 @@ export function filterGeneralItems(
         // console.log('AFTER POST API CALL data', responseJson);
         filteredDataFromServer = responseJson.data;
       });
+
     items.data = filteredDataFromServer;
+    items.filterSuccess = true;
+    console.log('filteredDataFromServer', filteredDataFromServer, items);
     dispatch(filterItemsInProcess(false));
     dispatch(filteredItems(items));
   };
