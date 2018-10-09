@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react';
+import React, { Fragment } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import ProductCard from '../common/productCard';
 import PropTypes from 'prop-types';

@@ -1,4 +1,3 @@
-import { itemsFetchData } from './items';
 import API from '../api/api';
 import axios from 'axios';
 
@@ -53,7 +52,7 @@ export function filterGeneralItems(
 
 export function sortItems(sortParams) {
   return async (dispatch, getState) => {
-    // dispatch(filterItemsInProcess(true));
+    dispatch(filterItemsInProcess(true));
     let obj = getState();
     let items = Object.assign({}, obj.items);
     let sortedDataFromServer = null;
@@ -70,13 +69,13 @@ export function sortItems(sortParams) {
         sortItemReq
       })
       .then(responseJson => {
-        console.log('AFTER POST API CALL sort items', responseJson);
+        // console.log('AFTER POST API CALL sort items', responseJson);
         sortedDataFromServer = responseJson.data;
       });
 
-    items.data = sortedDataFromServer;
+    items.data = sortedDataFromServer.data;
     console.log('sortedDataFromServer', sortedDataFromServer, items);
-    // dispatch(filterItemsInProcess(false));
-    // dispatch(filteredItems(items));
+    dispatch(filterItemsInProcess(false));
+    dispatch(filteredItems(items));
   };
 }

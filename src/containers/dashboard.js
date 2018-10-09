@@ -33,10 +33,12 @@ class DashboardContainer extends Component {
   };
   sortItems = finalizedObj => {
     console.log('finalizedObj', finalizedObj);
-    if (finalizedObj.maxLimit === null && finalizedObj.minLimit === null) {
+    if (finalizedObj.minLimit === Infinity) {
+      console.log('Actuall null value');
       this.props.fetchData('http://localhost:8000?pagination=0');
+    } else {
+      this.props.sortItems(finalizedObj);
     }
-    this.props.sortItems(finalizedObj);
   };
   render() {
     console.log('this.props.items', this.props.items);
