@@ -7,10 +7,10 @@ const Dashboard = props => {
   return (
     <div>
       <Row className="show-grid">
-        <Col xs={4} md={2}>
+        <Col xs={4} sm={2} md={2}>
           <Sidebar {...props} />
         </Col>
-        <Col md={10}>
+        <Col md={10} sm={10}>
           <Content {...props} />
         </Col>
       </Row>

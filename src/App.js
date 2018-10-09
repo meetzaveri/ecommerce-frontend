@@ -14,6 +14,11 @@ const DashboardLoader = Loadable({
   loading: Loading
 });
 
+const SignupFormLoader = Loadable({
+  loader: () => import('./containers/formcontainer/index'),
+  loading: Loading
+});
+
 class App extends Component {
   render() {
     return (
@@ -22,6 +27,7 @@ class App extends Component {
           <Router>
             <Switch>
               <Route exact path={routes.index} component={DashboardLoader} />
+              <Route exact path={routes.signup} component={SignupFormLoader} />
             </Switch>
           </Router>
         </Fragment>

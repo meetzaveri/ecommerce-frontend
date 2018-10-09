@@ -1,22 +1,27 @@
 export const checkboxes = [
   {
-    name: 'check-box-1',
+    name: '499,999',
     key: 'checkBox1',
-    label: 'Check Box 1'
+    label: 'Rs. 499 to 999'
   },
   {
-    name: 'check-box-2',
+    name: '1000,1499',
     key: 'checkBox2',
-    label: 'Check Box 2'
+    label: 'Rs. 1000 to 1499'
   },
   {
-    name: 'check-box-3',
+    name: '1500,1999',
     key: 'checkBox3',
-    label: 'Check Box 3'
+    label: 'Rs. 1500 to 1999'
   },
   {
-    name: 'check-box-4',
+    name: '2000,2499',
     key: 'checkBox4',
-    label: 'Check Box 4'
+    label: 'Rs. 2000 to 2499'
+  },
+  {
+    name: '2500,10000',
+    key: 'checkBox4',
+    label: 'Rs. 2500 and above'
   }
 ];

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import Dashboard from '../components/dashboard';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { itemsFetchData } from '../actions/items';
-import { filterItemsAction, filterGeneralItems } from '../actions/filteritems';
+import { itemsFetchData, loadMoreItems } from '../actions/items';
+import { filterGeneralItems, sortItems } from '../actions/filteritems';
 
 class DashboardContainer extends Component {
   constructor(props) {
@@ -11,41 +11,56 @@ class DashboardContainer extends Component {
     this.state = {};
   }
   componentDidMount() {
-    this.props.fetchData('http://localhost:8000/');
+    this.props.fetchData('http://localhost:8000?pagination=0');
   }
-  filterBrand = filterProdRequest => {
-    console.log('finalProducts for brand', filterProdRequest, this.props.items);
-    this.props.filterBrand(this.props.items, filterProdRequest);
+  loadDataViaPagination = pagination => {
+    this.props.loadMoreItems(
+      'http://localhost:8000?pagination=' + pagination,
+      this.props.items
+    );
   };
-  filterColor = filterProdRequest => {
-    console.log('finalProducts for color', filterProdRequest, this.props.items);
-    this.props.filterColor(this.props.items, filterProdRequest);
-  };
+
   filterGeneral = (filterProdRequest, currentFilterCategory) => {
+    console.log(
+      'this.props.items products for filter prod req',
+      this.props.items
+    );
     this.props.filterGeneral(
       this.props.items,
       filterProdRequest,
       currentFilterCategory
     );
   };
+  sortItems = finalizedObj => {
+    console.log('finalizedObj', finalizedObj);
+    if (finalizedObj.minLimit === Infinity) {
+      console.log('Actuall null value');
+      this.props.fetchData('http://localhost:8000?pagination=0');
+    } else {
+      this.props.sortItems(finalizedObj);
+    }
+  };
   render() {
     console.log('this.props.items', this.props.items);
+    console.log('this.props.filteredItems', this.props.filteredItems);
+    const { items, filteredItems } = this.props;
+    const { loadDataViaPagination, sortItems } = this;
+    const actions = { loadDataViaPagination, sortItems };
     return (
       <div>
-        {this.props.filteredItems.data &&
-        this.props.filteredItems.data.length > 0 ? (
+        {filteredItems.data && filteredItems.data.length >= 0 ? (
           <Dashboard
-            items={this.props.filteredItems}
-            onFilterBrand={this.filterBrand}
-            onFilterColor={this.filterColor}
+            items={filteredItems}
             filterGeneral={this.filterGeneral}
+            filterFlag={true}
+            actions={actions}
           />
         ) : (
           <Dashboard
-            items={this.props.items}
-            onFilterBrand={this.filterBrand}
-            onFilterColor={this.filterColor}
+            items={items}
             filterGeneral={this.filterGeneral}
+            filterFlag={false}
+            actions={actions}
           />
         )}
       </div>
@@ -54,7 +69,8 @@ class DashboardContainer extends Component {
 }
 
 DashboardContainer.propTypes = {
-  fetchData: PropTypes.func.isRequired
+  fetchData: PropTypes.func,
+  loadDataViaPagination: PropTypes.func
 };
 
 const mapStateToProps = state => {
@@ -68,10 +84,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchData: url => dispatch(itemsFetchData(url)),
-    filterBrand: (items, filterProductRequest) =>
-      dispatch(filterItemsAction(items, 'brand', filterProductRequest)),
-    filterColor: (items, filterProductRequest) =>
-      dispatch(filterItemsAction(items, 'primaryColor', filterProductRequest)),
+    loadMoreItems: (url, prevStateData) =>
+      dispatch(loadMoreItems(url, prevStateData)),
+    sortItems: sortParams => dispatch(sortItems(sortParams)),
     filterGeneral: (items, filterProductRequest, currentFilterCategory) =>
       dispatch(
         filterGeneralItems(items, filterProductRequest, currentFilterCategory)
