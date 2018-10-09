@@ -50,3 +50,33 @@ export function filterGeneralItems(
     dispatch(filteredItems(items));
   };
 }
+
+export function sortItems(sortParams) {
+  return async (dispatch, getState) => {
+    // dispatch(filterItemsInProcess(true));
+    let obj = getState();
+    let items = Object.assign({}, obj.items);
+    let sortedDataFromServer = null;
+    // console.log('items in filter general', productData, filterRequestArr);
+    let rawSortItemReqObj = {
+      maxLimit: sortParams.maxLimit,
+      minLimit: sortParams.minLimit
+    };
+
+    let sortItemReq = JSON.stringify(rawSortItemReqObj);
+
+    await axios
+      .post(API.sortData, {
+        sortItemReq
+      })
+      .then(responseJson => {
+        console.log('AFTER POST API CALL sort items', responseJson);
+        sortedDataFromServer = responseJson.data;
+      });
+
+    items.data = sortedDataFromServer;
+    console.log('sortedDataFromServer', sortedDataFromServer, items);
+    // dispatch(filterItemsInProcess(false));
+    // dispatch(filteredItems(items));
+  };
+}

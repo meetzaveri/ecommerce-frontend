@@ -3,7 +3,7 @@ import Dashboard from '../components/dashboard';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { itemsFetchData, loadMoreItems } from '../actions/items';
-import { filterGeneralItems } from '../actions/filteritems';
+import { filterGeneralItems, sortItems } from '../actions/filteritems';
 
 class DashboardContainer extends Component {
   constructor(props) {
@@ -31,12 +31,19 @@ class DashboardContainer extends Component {
       currentFilterCategory
     );
   };
+  sortItems = finalizedObj => {
+    console.log('finalizedObj', finalizedObj);
+    if (finalizedObj.maxLimit === null && finalizedObj.minLimit === null) {
+      this.props.fetchData('http://localhost:8000?pagination=0');
+    }
+    this.props.sortItems(finalizedObj);
+  };
   render() {
     console.log('this.props.items', this.props.items);
     console.log('this.props.filteredItems', this.props.filteredItems);
     const { items, filteredItems } = this.props;
-    const { loadDataViaPagination } = this;
-    const actions = { loadDataViaPagination };
+    const { loadDataViaPagination, sortItems } = this;
+    const actions = { loadDataViaPagination, sortItems };
     return (
       <div>
         {filteredItems.data && filteredItems.data.length >= 0 ? (
@@ -61,8 +68,7 @@ class DashboardContainer extends Component {
 
 DashboardContainer.propTypes = {
   fetchData: PropTypes.func,
-  loadDataViaPagination: PropTypes.func,
-  filteredItems: PropTypes.object
+  loadDataViaPagination: PropTypes.func
 };
 
 const mapStateToProps = state => {
@@ -78,6 +84,7 @@ const mapDispatchToProps = dispatch => {
     fetchData: url => dispatch(itemsFetchData(url)),
     loadMoreItems: (url, prevStateData) =>
       dispatch(loadMoreItems(url, prevStateData)),
+    sortItems: sortParams => dispatch(sortItems(sortParams)),
     filterGeneral: (items, filterProductRequest, currentFilterCategory) =>
       dispatch(
         filterGeneralItems(items, filterProductRequest, currentFilterCategory)
