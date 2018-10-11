@@ -10,10 +10,26 @@ const Content = props => {
   return (
     <Fragment>
       <Row>
+        <Col style={{ padding: '20px' }}>
+          <form>
+            <select
+              value={props.state.selectedValueForSortPrice}
+              onChange={e =>
+                props.actions.handleOnChangeForSorting(e, props.filterFlag)
+              }
+            >
+              <option defaultValue="0">Select sorting</option>
+              <option value="1">Price : Low to High</option>
+              <option value="2">Price : High to Low</option>
+            </select>
+          </form>
+        </Col>
+      </Row>
+      <Row>
         {props.items.data &&
           props.items.data.map((item, index) => (
-            <React.Fragment key={item.productId}>
-              <Col xs={4} md={4}>
+            <React.Fragment>
+              <Col xs={4} sm={4} md={4} key={item.productId}>
                 <ProductCard
                   img={item.img}
                   brand={item.brand}

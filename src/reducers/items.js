@@ -25,6 +25,9 @@ export function items(state = [], action) {
     case 'LOAD_MORE_ITEMS_SUCCESS':
       return action.items;
 
+    case 'SORTED_ITEMS_SUCCESS':
+      return action.items;
+
     default:
       return state;
   }
@@ -44,6 +47,9 @@ export function filteredItems(state = {}, action) {
   switch (action.type) {
     case 'FILTER_ITEMS_SUCCESS':
       return action.filteredItems;
+
+    case 'RESET_FILTER':
+      return (state = {});
 
     default:
       return state;

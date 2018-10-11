@@ -4,13 +4,14 @@ import PropTypes from 'prop-types';
 const ProductCard = props => {
   return (
     <Fragment>
-      <div style={{ padding: '20px' }}>
+      <div style={{ padding: '10px 0px', height: '400px' }}>
         <img
           alt="shirt"
-          style={{ width: '200px', height: '100%' }}
+          className="img-responsive"
+          style={{ width: '200px' }}
           src={props.img}
         />
-        <h3 style={{ padding: '0px', margin: '5px' }}>{props.brand}</h3>
+        <h3>{props.brand}</h3>
         <span>{props.productName}</span>
         <br />
         <span>{props.price}</span>

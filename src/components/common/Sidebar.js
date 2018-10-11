@@ -15,6 +15,16 @@ class Sidebar extends Component {
     };
   }
 
+  clearAllFilter = () => {
+    this.setState({
+      checkedItems: new Map(),
+      checkedItemsForBrands: [],
+      checkedItemsForColors: [],
+      checkedItemsForPrice: []
+    });
+    this.props.actions.resetFilter();
+  };
+
   handleToggleForBrand = e => {
     // console.log('e.target.name', e.target.name);
     const item = e.target.name;
@@ -194,6 +204,7 @@ class Sidebar extends Component {
               </div>
             ))}
           </div>
+          <button onClick={this.clearAllFilter}>x Clear All</button>
         </div>
       </Fragment>
     );
