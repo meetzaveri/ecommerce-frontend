@@ -31,20 +31,11 @@ class DashboardContainer extends Component {
 
   handleOnChangeForSorting = (e, filterFlag) => {
     const value = e.target.value;
-    const sortedItemsCounter = this.state.sortedItemsCounter;
-    console.log('filterFlag', filterFlag);
+    console.log('filterFlag', filterFlag, value);
     this.setState({ selectedValueForSortPrice: value });
-    this.props.sortWithPrice(value, filterFlag);
-    // if (value == 1 || value == 2) {
-    //   this.props.sortWithPrice(
-    //     API.sortPrice +
-    //       '?sortFlag=' +
-    //       value +
-    //       '&pagination=' +
-    //       sortedItemsCounter,
-    //     sortedItemsCounter
-    //   );
-    // }
+    if (value == 1 || value == 2) {
+      this.props.sortWithPrice(value, filterFlag);
+    }
   };
 
   filterGeneral = (filterProdRequest, currentFilterCategory) => {
@@ -52,14 +43,23 @@ class DashboardContainer extends Component {
       'this.props.items products for filter prod req',
       this.props.items
     );
-    this.setState({ selectedValueForSortPrice: 0, sortedItemsCounter: 0 });
-    this.props.filterGeneral(
-      this.props.items,
-      filterProdRequest,
-      currentFilterCategory
-    );
+    const sortPriceValue = this.state.selectedValueForSortPrice;
+    if (sortPriceValue == 1 || sortPriceValue == 2) {
+      this.props.filterGeneral(
+        this.props.items,
+        filterProdRequest,
+        currentFilterCategory,
+        sortPriceValue
+      );
+    } else {
+      this.props.filterGeneral(
+        this.props.items,
+        filterProdRequest,
+        currentFilterCategory
+      );
+    }
   };
-  sortItems = finalizedObj => {
+  filterItemsForPrice = finalizedObj => {
     console.log('finalizedObj', finalizedObj);
     if (finalizedObj.minLimit === Infinity) {
       console.log('Actuall null value');
@@ -74,13 +74,13 @@ class DashboardContainer extends Component {
     const { items, filteredItems } = this.props;
     const {
       loadDataViaPagination,
-      sortItems,
+      filterItemsForPrice,
       handleOnChangeForSorting,
       resetFilter
     } = this;
     const actions = {
       loadDataViaPagination,
-      sortItems,
+      filterItemsForPrice,
       resetFilter,
       handleOnChangeForSorting
     };
@@ -127,9 +127,19 @@ const mapDispatchToProps = dispatch => {
     loadMoreItems: (url, prevStateData) =>
       dispatch(loadMoreItems(url, prevStateData)),
     sortItems: sortParams => dispatch(sortItems(sortParams)),
-    filterGeneral: (items, filterProductRequest, currentFilterCategory) =>
+    filterGeneral: (
+      items,
+      filterProductRequest,
+      currentFilterCategory,
+      sortPriceValue
+    ) =>
       dispatch(
-        filterGeneralItems(items, filterProductRequest, currentFilterCategory)
+        filterGeneralItems(
+          items,
+          filterProductRequest,
+          currentFilterCategory,
+          sortPriceValue
+        )
       ),
     sortWithPrice: (value, filterFlag) =>
       dispatch(sortItemswithPrice(value, filterFlag))

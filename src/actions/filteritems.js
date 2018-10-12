@@ -18,7 +18,8 @@ export function filteredItems(filteredItems) {
 export function filterGeneralItems(
   productData,
   filterRequestArr,
-  currentFilterCategory
+  currentFilterCategory,
+  sortPriceValue
 ) {
   return async dispatch => {
     dispatch(filterItemsInProcess(true));
@@ -35,7 +36,8 @@ export function filterGeneralItems(
     await axios
       .post(API.filterData, {
         filterReq,
-        currentFilterCategory
+        currentFilterCategory,
+        sortPriceValue
       })
       .then(responseJson => {
         // console.log('AFTER POST API CALL data', responseJson);

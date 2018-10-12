@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Navbar } from 'react-bootstrap';
 import ProductCard from '../common/productCard';
 import PropTypes from 'prop-types';
 
@@ -9,7 +9,7 @@ const Content = props => {
   console.log('Props in content.js', props);
   return (
     <Fragment>
-      <Row>
+      <Navbar fixedTop style={{ width: 'inherit', left: '15%' }}>
         <Col style={{ padding: '20px' }}>
           <form>
             <select
@@ -24,8 +24,8 @@ const Content = props => {
             </select>
           </form>
         </Col>
-      </Row>
-      <Row>
+      </Navbar>
+      <Row style={{ marginTop: '5%' }}>
         {props.items.data &&
           props.items.data.map((item, index) => (
             <React.Fragment>
@@ -40,7 +40,7 @@ const Content = props => {
             </React.Fragment>
           ))}
       </Row>
-      <Row>
+      <Row style={{ padding: '20px' }}>
         <Col style={{ textAlign: 'center' }} xs={12} md={12}>
           {paginationCounter < 4 && !props.filterFlag ? (
             <button

@@ -143,7 +143,7 @@ class Sidebar extends Component {
       minLimit
     };
     console.log('checkedItemsForPrice', checkedItemsForPrice, finalizedObj);
-    this.props.actions.sortItems(finalizedObj);
+    this.props.actions.filterItemsForPrice(finalizedObj);
 
     this.setState(prevState => ({
       checkedItems: prevState.checkedItems.set(item, isChecked),
@@ -159,10 +159,10 @@ class Sidebar extends Component {
             {/* For selecting brand */}
             <h2> Brand</h2>
             {this.props.items.brands &&
-              this.props.items.brands.map((item, index) => (
+              Object.keys(this.props.items.brands).map((item, index) => (
                 <div key={index}>
                   <label>
-                    {item}
+                    {item}({this.props.items.brands[item]})
                     <Checkbox
                       name={item}
                       checked={this.state.checkedItems.get(item)}
@@ -176,10 +176,10 @@ class Sidebar extends Component {
             {/* For selecting Color */}
             <h2>Color</h2>
             {this.props.items.colors &&
-              this.props.items.colors.map((item, index) => (
+              Object.keys(this.props.items.colors).map((item, index) => (
                 <div key={index}>
                   <label>
-                    {item}
+                    {item}({this.props.items.colors[item]})
                     <Checkbox
                       name={item}
                       checked={this.state.checkedItems.get(item)}
@@ -204,7 +204,13 @@ class Sidebar extends Component {
               </div>
             ))}
           </div>
-          <button onClick={this.clearAllFilter}>x Clear All</button>
+
+          <button
+            onClick={this.clearAllFilter}
+            disabled={!this.props.filterFlag}
+          >
+            x Clear All
+          </button>
         </div>
       </Fragment>
     );
@@ -214,7 +220,7 @@ class Sidebar extends Component {
 Sidebar.propTypes = {
   filterGeneral: PropTypes.func,
   actions: PropTypes.shape({
-    sortItems: PropTypes.func
+    filterItemsForPrice: PropTypes.func
   })
 };
 
