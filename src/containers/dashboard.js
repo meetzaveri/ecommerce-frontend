@@ -110,7 +110,9 @@ class DashboardContainer extends Component {
 
 DashboardContainer.propTypes = {
   fetchData: PropTypes.func,
-  loadDataViaPagination: PropTypes.func
+  loadDataViaPagination: PropTypes.func,
+  filteredItems : PropTypes.array,
+  items : PropTypes.object
 };
 
 const mapStateToProps = state => {
