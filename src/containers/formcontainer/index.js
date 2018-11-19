@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Userform from './form';
 
-const imaginaryUser = {
+// Can use simple formik instead of withFormik HOC with help of <Formik> component
+const userModel = {
   email: '',
   username: '',
   gender: 'male',
@@ -19,7 +20,7 @@ class UserformContainer extends Component {
     console.log('finalFormState', finalFormState);
   };
   render() {
-    return <Userform user={imaginaryUser} onSubmitForm={this.onSubmitForm} />;
+    return <Userform user={userModel} onSubmitForm={this.onSubmitForm} />;
   }
 }
 
